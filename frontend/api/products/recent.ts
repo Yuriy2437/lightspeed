@@ -1,30 +1,53 @@
-export default async function handler(req: any, res: any) {
-  try {
-    const STORE_ID = process.env.ECWID_STORE_ID;
-    const TOKEN = process.env.ECWID_TOKEN;
-    if (!STORE_ID || !TOKEN) {
-      res.status(500).json({ error: 'API credentials not set' });
-      return;
-    }
-    const limit = req.query.limit || 5;
-    const url = `https://app.ecwid.com/api/v3/${STORE_ID}/products?token=${TOKEN}&sortBy=DATE_CREATED_DESC&limit=${limit}`;
-    const apiRes = await fetch(url);
-    if (!apiRes.ok) {
-      res
-        .status(apiRes.status)
-        .json({ error: 'Ecwid API failed', status: apiRes.status });
-      return;
-    }
-    const data = await apiRes.json();
-    if (!Array.isArray(data.items)) {
-      res
-        .status(500)
-        .json({ error: 'Ecwid API returned invalid response', data });
-      return;
-    }
-    res.status(200).json({ items: data.items });
-  } catch (e) {
-    console.error('products/recent crashed:', e);
-    res.status(500).json({ error: String(e) });
-  }
+export default function handler(req: any, res: any) {
+  const mockProducts = [
+    {
+      id: '1',
+      name: 'Apple',
+      sku: 'A001',
+      price: 3.54,
+      currency: 'USD',
+      imageUrl:
+        'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=80&q=80',
+    },
+    {
+      id: '2',
+      name: 'Orange',
+      sku: 'O222',
+      price: 1.6,
+      currency: 'USD',
+      imageUrl:
+        'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=80&q=80',
+    },
+    {
+      id: '3',
+      name: 'Peach',
+      sku: 'P333',
+      price: 2.13,
+      currency: 'USD',
+      imageUrl:
+        'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=80&q=80',
+    },
+    {
+      id: '4',
+      name: 'Banana',
+      sku: 'B444',
+      price: 1.99,
+      currency: 'USD',
+      imageUrl:
+        'https://images.unsplash.com/photo-1574226516831-e1dff420e37d?auto=format&fit=crop&w=80&q=80',
+    },
+    {
+      id: '5',
+      name: 'Avocado',
+      sku: 'A055',
+      price: 2.4,
+      currency: 'USD',
+      imageUrl:
+        'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=80&q=80',
+    },
+  ];
+
+  // Просто по limit режем результат
+  const limit = Number(req.query.limit) || 5;
+  res.status(200).json({ items: mockProducts.slice(0, limit) });
 }
