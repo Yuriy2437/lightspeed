@@ -1,8 +1,8 @@
 export default async function handler(req, res) {
   const STORE_ID = process.env.ECWID_STORE_ID;
   const TOKEN = process.env.ECWID_TOKEN;
+  const limit = Number(req.query.limit) || 5;
 
-  // Фолбэк товары (на случай ошибок API Ecwid)
   const fallbackProducts = [
     {
       id: '1',
@@ -46,28 +46,25 @@ export default async function handler(req, res) {
     },
   ];
 
-  const limit = Number(req.query.limit) || 5;
-
   if (!STORE_ID || !TOKEN) {
-    console.warn('⚠️ STORE_ID или TOKEN не заданы! Используем fallback.');
-    res.status(200).json({ items: fallbackProducts.slice(0, limit) });
-    return;
+    return res.status(200).json({ items: fallbackProducts.slice(0, limit) });
   }
 
   try {
-    const url = `https://app.ecwid.com/api/v3/${STORE_ID}/products?token=${TOKEN}&sortBy=DATE_CREATED_DESC&limit=${limit}`;
-    const apiRes = await fetch(url);
-    if (!apiRes.ok) throw new Error(`Ошибка API Ecwid: ${apiRes.status}`);
+    const url = `https://app.ecwid.com/api/v3/${STORE_ID}/products?sortBy=DATE_CREATED_DESC&limit=${limit}`;
+    const apiRes = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    if (!apiRes.ok) throw new Error('Ecwid API Error: ' + apiRes.status);
     const data = await apiRes.json();
-
     if (!Array.isArray(data.items) || data.items.length === 0) {
-      console.warn('⚠️ API вернуло пусто, подставляем fallback');
       return res.status(200).json({ items: fallbackProducts.slice(0, limit) });
     }
-
     res.status(200).json({ items: data.items });
   } catch (error) {
-    console.error('Ошибка получения данных Ecwid:', error);
+    console.error('Ecwid API fetch error:', error);
     res.status(200).json({ items: fallbackProducts.slice(0, limit) });
   }
 }
