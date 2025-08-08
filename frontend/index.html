@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Ecwid Store Widget</title>
+    <!-- 1. Ecwid CSS Framework -->
+    <link
+      rel="stylesheet"
+      href="https://djqizrxa6f10j.cloudfront.net/ecwid-css-framework/ecwid-app-ui.min.css"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- 2. Ecwid скрипт -->
+    <div id="my-ecwid-store"></div>
+    <script
+      data-cfasync="false"
+      type="text/javascript"
+      src="https://app.ecwid.com/script.js?101560752&data_platform=code&data_date="
+      charset="utf-8"
+    ></script>
+    <script type="text/javascript">
+      xProductBrowser(
+        'categoriesPerRow=3',
+        'views=grid(20,3) list(60) table(60)',
+        'categoryView=grid',
+        'searchView=list',
+        'id=my-ecwid-store'
+      );
+    </script>
+    <!-- 3. Скрипт Vue для виджета "Recently added products" -->
+    <script type="module" src="/src/mountRecentProductsWidget.ts"></script>
+
+    <!-- 4. Запись id/имени товара в комментарий к заказу и очистка после заказа -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function injectToComments() {
+          try {
+            var idsFromWidget = localStorage.getItem('recent_widget_cart');
+            if (idsFromWidget && idsFromWidget !== '[]') {
+              var noteField = document.querySelector(
+                'textarea[name="order-comments"]'
+              );
+              var label = 'Added via widget: ';
+              if (noteField) {
+                if (!noteField.value.includes(label)) {
+                  noteField.value =
+                    (noteField.value ? noteField.value + '\n' : '') +
+                    label +
+                    idsFromWidget;
+                }
+              }
+              var customField = document.querySelector(
+                'input[name="recentFromWidget"], textarea[name="recentFromWidget"]'
+              );
+              if (customField) {
+                customField.value = idsFromWidget;
+              }
+            }
+          } catch (e) {}
+        }
+        function addEcwidListeners() {
+          if (window.Ecwid && window.Ecwid.OnPageLoaded) {
+            window.Ecwid.OnPageLoaded.add(function (page) {
+              if (
+                page.type === 'CHECKOUT_PAYMENT_DETAILS' ||
+                page.type === 'CHECKOUT_DETAILS' ||
+                page.type === 'CHECKOUT_SHIPPING_DETAILS' ||
+                page.type === 'CHECKOUT_OPTIONS'
+              ) {
+                setTimeout(injectToComments, 150);
+              }
+            });
+            window.Ecwid.OnOrderPlaced.add(function (order) {
+              localStorage.removeItem('recent_widget_cart');
+              localStorage.removeItem('recent_widget_names');
+            });
+          } else {
+            setTimeout(addEcwidListeners, 300);
+          }
+        }
+        addEcwidListeners();
+      });
+    </script>
+
+    <!-- 5. Скрипт для бейджа "Added via widget" (решение через OnPageLoaded Ecwid) -->
+    <script>
+      (function () {
+        function badgeRecentlyAdded() {
+          try {
+            var namesFromWidget = JSON.parse(
+              localStorage.getItem('recent_widget_names') || '[]'
+            );
+            document
+              .querySelectorAll('.added-from-widget-badge')
+              .forEach(function (b) {
+                b.remove();
+              });
+            document
+              .querySelectorAll('.ec-cart-item__title')
+              .forEach(function (titleElem) {
+                var prodTitle =
+                  titleElem.textContent && titleElem.textContent.trim();
+                if (namesFromWidget.includes(prodTitle)) {
+                  if (
+                    !titleElem.parentElement.querySelector(
+                      '.added-from-widget-badge'
+                    )
+                  ) {
+                    var badge = document.createElement('div');
+                    badge.className = 'added-from-widget-badge';
+                    badge.textContent = 'Added via widget';
+                    badge.style.color = '#ee3a78';
+                    badge.style.fontSize = '0.98em';
+                    badge.style.fontWeight = '500';
+                    badge.style.marginTop = '4px';
+                    badge.style.marginBottom = '0px';
+                    badge.style.lineHeight = '1.12';
+                    badge.style.letterSpacing = '0.01em';
+                    titleElem.parentElement.appendChild(badge);
+                  }
+                }
+              });
+          } catch (e) {}
+        }
+
+        function initEcwidBadge() {
+          if (window.Ecwid && window.Ecwid.OnPageLoaded) {
+            window.Ecwid.OnPageLoaded.add(function (page) {
+              if (
+                page.type === 'CART' ||
+                page.type === 'CHECKOUT_CART' ||
+                page.type === 'CHECKOUT_SHIPPING_DETAILS' ||
+                page.type === 'CHECKOUT_PAYMENT_DETAILS' ||
+                page.type === 'CHECKOUT_DETAILS' ||
+                page.type === 'CHECKOUT_OPTIONS'
+              ) {
+                setTimeout(badgeRecentlyAdded, 200);
+              }
+            });
+          } else {
+            setTimeout(initEcwidBadge, 200);
+          }
+        }
+        initEcwidBadge();
+
+        document.addEventListener('click', function (e) {
+          if (e.target.closest('.ec-cart')) setTimeout(badgeRecentlyAdded, 200);
+        });
+      })();
+    </script>
+    <!-- Vite автоматически вставит bundle js сюда -->
+  </body>
+</html>

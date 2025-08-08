@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - 8080:80 # Снаружи 8080, внутри контейнера nginx всегда слушает 80
+    depends_on:
+      - backend
+    environment:
+      VITE_APP_BACKEND_URL: 'http://backend:3000'
+
+  backend:
+    build: ./backend
+    ports:
+      - 3000:3000
+    environment:
+      ECWID_STORE_ID: '101560752'
+      ECWID_TOKEN: 'public_ie55a1cQU472c1GBmeBqAVpL1ks3LFpu'
