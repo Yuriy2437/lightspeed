@@ -3,68 +3,24 @@ export default async function handler(req, res) {
   const TOKEN = process.env.ECWID_TOKEN;
   const limit = Number(req.query.limit) || 5;
 
-  const fallbackProducts = [
-    {
-      id: '1',
-      name: 'Apple',
-      sku: 'A001',
-      price: 3.54,
-      currency: 'USD',
-      imageUrl: '',
-    },
-    {
-      id: '2',
-      name: 'Orange',
-      sku: 'O222',
-      price: 1.6,
-      currency: 'USD',
-      imageUrl: '',
-    },
-    {
-      id: '3',
-      name: 'Peach',
-      sku: 'P333',
-      price: 2.13,
-      currency: 'USD',
-      imageUrl: '',
-    },
-    {
-      id: '4',
-      name: 'Banana',
-      sku: 'B444',
-      price: 1.99,
-      currency: 'USD',
-      imageUrl: '',
-    },
-    {
-      id: '5',
-      name: 'Avocado',
-      sku: 'A055',
-      price: 2.4,
-      currency: 'USD',
-      imageUrl: '',
-    },
-  ];
-
   if (!STORE_ID || !TOKEN) {
-    return res.status(200).json({ items: fallbackProducts.slice(0, limit) });
+    return res
+      .status(500)
+      .json({ error: 'ECWID_STORE_ID or ECWID_TOKEN is missing' });
   }
 
   try {
     const url = `https://app.ecwid.com/api/v3/${STORE_ID}/products?sortBy=DATE_CREATED_DESC&limit=${limit}`;
     const apiRes = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-      },
+      headers: { Authorization: `Bearer ${TOKEN}` },
     });
-    if (!apiRes.ok) throw new Error('Ecwid API Error: ' + apiRes.status);
+
+    if (!apiRes.ok) throw new Error('Ecwid API status ' + apiRes.status);
     const data = await apiRes.json();
-    if (!Array.isArray(data.items) || data.items.length === 0) {
-      return res.status(200).json({ items: fallbackProducts.slice(0, limit) });
-    }
-    res.status(200).json({ items: data.items });
+
+    res.status(200).json({ items: data.items || [] });
   } catch (error) {
-    console.error('Ecwid API fetch error:', error);
-    res.status(200).json({ items: fallbackProducts.slice(0, limit) });
+    console.error('Fetch Ecwid error:', error);
+    res.status(500).json({ error: 'Failed to fetch Ecwid products' });
   }
 }
