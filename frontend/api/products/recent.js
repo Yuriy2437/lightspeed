@@ -21,6 +21,6 @@ export default async function handler(req, res) {
     res.status(200).json({ items: data.items || [] });
   } catch (error) {
     console.error('Fetch Ecwid error:', error);
-    res.status(500).json({ error: 'Failed to fetch Ecwid products' });
+    res.status(500).json({ error: 'Faileed to fetch Ecwid products' });
   }
 }
