@@ -29,7 +29,7 @@ export default function handler(req: any, res: any) {
     },
     {
       id: '4',
-      name: 'Banana',
+      name: 'Bananas',
       sku: 'B444',
       price: 1.99,
       currency: 'USD',
