@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       .json({ error: 'ECWID_STORE_ID or ECWID_TOKEN is missing' });
   }
 
-  const url = `https://app.ecwid.com/api/v3/${STORE_ID}/products?sortBy=DATE_CREATED_DESC&limit=${limit}`;
+  const url = `https://app.ecwid.com/api/v3/${STORE_ID}/products?sortBy=ADDED_TIME_DESC&limit=${limit}`;
   console.log('Request URL:', url);
   console.log(
     'Authorization header:',
