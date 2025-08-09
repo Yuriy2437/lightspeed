@@ -66,6 +66,7 @@ Clone the repository:
 
 - https://lightspeed-kappa.vercel.app/
 - Test access available (login — "Lukas") or as a guest.
+- Lukas is the name of the imaginary shop owner for input into Widget Settings.
 
 ## For Developers
 
