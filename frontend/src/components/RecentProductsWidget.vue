@@ -169,40 +169,27 @@ async function fetchProducts() {
 </script>
 
 <style>
-/* Твои текущие стили */
 .ecwid-btn-settings {
   display: inline-block !important;
   background: linear-gradient(90deg, #ee3a78 0%, #efb732 100%) !important;
   color: #fff !important;
   font-weight: 600 !important;
   font-size: 1.01em !important;
-  letter-spacing: 0.01em;
   border-radius: 7px !important;
   border: none !important;
   box-shadow: 0 3px 7px 0 #ee3a7836 !important;
   padding: 8px 19px 8px 13px !important;
   margin: 0 auto !important;
   cursor: pointer !important;
-  text-decoration: none !important;
-  transition: background 0.18s, box-shadow 0.18s !important;
-  position: relative !important;
-  opacity: 1 !important;
-  z-index: 9999 !important;
-  min-width: 120px !important;
 }
 .ecwid-btn-settings__icon {
   display: inline-block !important;
   margin-right: 7px;
-  vertical-align: middle;
-  line-height: 1;
 }
 .ecwid-btn-settings:hover {
   background: linear-gradient(90deg, #efb732 0%, #ee3a78 100%) !important;
-  box-shadow: 0 6px 16px 0 #ee3a7856 !important;
-  color: #fff !important;
 }
 .settings-btn-block {
-  width: 100%;
   text-align: center;
   margin-bottom: 13px;
 }
@@ -210,35 +197,26 @@ async function fetchProducts() {
   border: 4px solid #ef4d8c !important;
   border-radius: 18px !important;
   background: #fff7fa !important;
-  box-shadow: 0 2px 10px 1px #fbaedc26;
   margin: 30px 0 16px 0 !important;
   padding: 23px !important;
-  width: 100% !important;
   display: flex !important;
   flex-direction: column !important;
 }
 .recent-products-panel__header {
   display: flex;
-  align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 13px;
   flex-wrap: wrap;
-  gap: 8px;
+  margin-bottom: 13px;
 }
 .recent-products-panel__title {
   font-weight: 700;
   color: #ee3a78;
   font-size: 1.27em;
 }
-.recent-products-panel__controls {
-  font-size: 1.02em;
-  color: #b24369;
-}
 .recent-products-panel__controls select {
   border-radius: 5px;
   margin-left: 6px;
   padding: 3px 9px;
-  font-size: 1em;
   border: 1.6px solid #f98ab6;
   background: #fff4f8;
 }
@@ -248,13 +226,11 @@ async function fetchProducts() {
   gap: 16px;
   max-height: 450px;
   overflow-y: auto;
-  padding: 0 3px;
 }
 .recent-products-panel__item {
   display: flex;
   align-items: center;
   gap: 18px;
-  border-radius: 7px;
   padding: 7px 12px 7px 2px;
   background: #fff;
   min-height: 94px;
@@ -263,23 +239,21 @@ async function fetchProducts() {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 80px;
-  max-width: 80px;
-  min-height: 80px;
-  max-height: 80px;
-  flex-shrink: 0;
+  min-width: 80px !important;
+  max-width: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
 }
 .recent-products-panel__img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: cover !important;
   border-radius: 8.5px;
   border: 2px solid #f98ab6;
   background: #fff;
 }
 .recent-products-panel__info {
   flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -289,118 +263,53 @@ async function fetchProducts() {
   font-weight: 600;
   color: #222;
   text-decoration: none;
-  font-size: 1.07em;
-  line-height: 1.12;
-  word-break: break-word;
-}
-.recent-products-panel__name:hover {
-  color: #ee3a78;
-  text-decoration: underline;
 }
 .recent-products-panel__price {
   font-size: 1.08em;
   color: #b99d31;
 }
 .recent-products-panel__buy {
-  margin-left: 12px;
+  margin-left: auto;
   white-space: nowrap;
   border-radius: 6px;
   min-width: 104px;
   font-size: 1.07em;
   padding: 7px 20px;
-  height: 38px;
-}
-.btn-large {
-  font-size: 1.07em;
-  min-height: 36px;
-  padding: 7px 20px;
-}
-.recent-products-disabled {
-  background: #fff7fa;
-  border-radius: 14px;
-  padding: 30px 10px;
-  text-align: center;
 }
 
 /* ===== Мобильная адаптация ===== */
 @media (max-width: 768px) {
-  .recent-products-panel.force-widget-border {
-    padding: 16px !important;
-    border-width: 3px !important;
-  }
-  .recent-products-panel__header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-  .recent-products-panel__title {
-    font-size: 1.15em;
-  }
-  .recent-products-panel__controls {
-    font-size: 0.95em;
-  }
-  .recent-products-panel__list {
-    max-height: none;
-  }
   .recent-products-panel__item {
     flex-wrap: wrap;
     gap: 12px;
-    padding: 8px;
   }
   .recent-products-panel__img-link,
   .recent-products-panel__img {
-    min-width: 64px;
-    max-width: 64px;
-    min-height: 64px;
-    max-height: 64px;
-  }
-  .recent-products-panel__info {
-    font-size: 1em;
+    min-width: 64px !important;
+    max-width: 64px !important;
+    min-height: 64px !important;
+    max-height: 64px !important;
   }
   .recent-products-panel__buy {
-    margin-left: auto;
     font-size: 1em;
     padding: 6px 14px;
     min-width: auto;
-    height: auto;
   }
 }
 @media (max-width: 480px) {
-  .recent-products-panel.force-widget-border {
-    padding: 12px !important;
-    border-radius: 12px !important;
-  }
-  .ecwid-btn-settings {
-    font-size: 0.92em !important;
-    padding: 6px 12px !important;
-    min-width: unset !important;
-  }
-  .recent-products-panel__title {
-    font-size: 1.05em;
-  }
-  .recent-products-panel__controls select {
-    padding: 2px 6px;
-    font-size: 0.9em;
-  }
   .recent-products-panel__item {
     flex-direction: column;
     align-items: flex-start;
   }
   .recent-products-panel__img-link,
   .recent-products-panel__img {
-    min-width: 100%;
-    max-width: 100%;
-    height: auto;
-  }
-  .recent-products-panel__info,
-  .recent-products-panel__price {
-    font-size: 0.95em;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
   }
   .recent-products-panel__buy {
-    align-self: stretch;
     width: 100%;
     text-align: center;
-    font-size: 1em;
   }
 }
 </style>
