@@ -20,9 +20,9 @@
     </div>
     <template v-if="enabled">
       <div class="recent-products-panel__header">
-        <span class="recent-products-panel__title"
-          >Recently added products</span
-        >
+        <span class="recent-products-panel__title">
+          Recently added products
+        </span>
         <span class="recent-products-panel__controls">
           Show:
           <select v-model.number="limit" @change="fetchProducts">
@@ -99,14 +99,11 @@ const products = ref<any[]>([]);
 function openSettings() {
   showSettingsPanel();
 }
-
 function readEnabled() {
   const st = localStorage.getItem('recent_widget_enabled');
   enabled.value = st === '1';
 }
-
 function widgetSettingsUpdatedHandler() {
-  // Перечитываем настройку когда пришло событие
   readEnabled();
   if (enabled.value) fetchProducts();
   else products.value = [];
@@ -172,7 +169,7 @@ async function fetchProducts() {
 </script>
 
 <style>
-/* --- Все рабочие стили, как в прежней версии --- */
+/* Твои текущие стили */
 .ecwid-btn-settings {
   display: inline-block !important;
   background: linear-gradient(90deg, #ee3a78 0%, #efb732 100%) !important;
@@ -207,7 +204,6 @@ async function fetchProducts() {
 .settings-btn-block {
   width: 100%;
   text-align: center;
-  margin-top: 0;
   margin-bottom: 13px;
 }
 .recent-products-panel.force-widget-border {
@@ -216,25 +212,23 @@ async function fetchProducts() {
   background: #fff7fa !important;
   box-shadow: 0 2px 10px 1px #fbaedc26;
   margin: 30px 0 16px 0 !important;
-  padding: 23px 23px 22px 23px !important;
+  padding: 23px !important;
   width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
   display: flex !important;
   flex-direction: column !important;
-  z-index: 13;
 }
 .recent-products-panel__header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 13px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .recent-products-panel__title {
   font-weight: 700;
   color: #ee3a78;
   font-size: 1.27em;
-  letter-spacing: 0.012em;
 }
 .recent-products-panel__controls {
   font-size: 1.02em;
@@ -264,31 +258,24 @@ async function fetchProducts() {
   padding: 7px 12px 7px 2px;
   background: #fff;
   min-height: 94px;
-  box-shadow: 0 1px 0 rgba(239, 77, 140, 0.07);
 }
 .recent-products-panel__img-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 80px !important;
-  max-width: 80px !important;
-  min-height: 80px !important;
-  max-height: 80px !important;
+  min-width: 80px;
+  max-width: 80px;
+  min-height: 80px;
+  max-height: 80px;
   flex-shrink: 0;
 }
 .recent-products-panel__img {
-  width: 80px !important;
-  height: 80px !important;
-  max-width: 80px !important;
-  max-height: 80px !important;
-  object-fit: cover !important;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
   border-radius: 8.5px;
   border: 2px solid #f98ab6;
   background: #fff;
-  display: block;
-  box-sizing: content-box;
-  padding: 0 !important;
-  margin: 0 !important;
 }
 .recent-products-panel__info {
   flex: 1;
@@ -305,7 +292,6 @@ async function fetchProducts() {
   font-size: 1.07em;
   line-height: 1.12;
   word-break: break-word;
-  cursor: pointer;
 }
 .recent-products-panel__name:hover {
   color: #ee3a78;
@@ -314,7 +300,6 @@ async function fetchProducts() {
 .recent-products-panel__price {
   font-size: 1.08em;
   color: #b99d31;
-  margin-top: 2px;
 }
 .recent-products-panel__buy {
   margin-left: 12px;
@@ -335,5 +320,87 @@ async function fetchProducts() {
   border-radius: 14px;
   padding: 30px 10px;
   text-align: center;
+}
+
+/* ===== Мобильная адаптация ===== */
+@media (max-width: 768px) {
+  .recent-products-panel.force-widget-border {
+    padding: 16px !important;
+    border-width: 3px !important;
+  }
+  .recent-products-panel__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .recent-products-panel__title {
+    font-size: 1.15em;
+  }
+  .recent-products-panel__controls {
+    font-size: 0.95em;
+  }
+  .recent-products-panel__list {
+    max-height: none;
+  }
+  .recent-products-panel__item {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 8px;
+  }
+  .recent-products-panel__img-link,
+  .recent-products-panel__img {
+    min-width: 64px;
+    max-width: 64px;
+    min-height: 64px;
+    max-height: 64px;
+  }
+  .recent-products-panel__info {
+    font-size: 1em;
+  }
+  .recent-products-panel__buy {
+    margin-left: auto;
+    font-size: 1em;
+    padding: 6px 14px;
+    min-width: auto;
+    height: auto;
+  }
+}
+@media (max-width: 480px) {
+  .recent-products-panel.force-widget-border {
+    padding: 12px !important;
+    border-radius: 12px !important;
+  }
+  .ecwid-btn-settings {
+    font-size: 0.92em !important;
+    padding: 6px 12px !important;
+    min-width: unset !important;
+  }
+  .recent-products-panel__title {
+    font-size: 1.05em;
+  }
+  .recent-products-panel__controls select {
+    padding: 2px 6px;
+    font-size: 0.9em;
+  }
+  .recent-products-panel__item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .recent-products-panel__img-link,
+  .recent-products-panel__img {
+    min-width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+  .recent-products-panel__info,
+  .recent-products-panel__price {
+    font-size: 0.95em;
+  }
+  .recent-products-panel__buy {
+    align-self: stretch;
+    width: 100%;
+    text-align: center;
+    font-size: 1em;
+  }
 }
 </style>

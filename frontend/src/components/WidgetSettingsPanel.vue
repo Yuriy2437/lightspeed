@@ -39,9 +39,9 @@
               </p>
             </div>
             <div class="form-group mb-3">
-              <label class="field__label" style="margin-bottom: 6px"
-                >Enable widget for customers:</label
-              >
+              <label class="field__label" style="margin-bottom: 6px">
+                Enable widget for customers:
+              </label>
               <div class="btn-group">
                 <button
                   :class="enabled ? 'btn-ecwid-primary' : 'btn-ecwid-default'"
@@ -101,7 +101,7 @@
                   </tbody>
                 </table>
               </div>
-              <div style="margin-top: 12px; display: flex; gap: 8px">
+              <div class="export-btns">
                 <button
                   class="btn-ecwid-primary"
                   :disabled="!selectedIds.length"
@@ -163,9 +163,7 @@ onMounted(() => {
   fetchExportProducts();
 });
 
-// Показываем $ всегда (или кастомное, если потребуется)
 function currencySymbol(curr?: string) {
-  // Можно расширить до поддержки других валют, если надо
   return '$';
 }
 
@@ -197,7 +195,7 @@ function doExport(format: 'csv' | 'xlsx') {
       obj.name,
       obj.sku,
       obj.price,
-      currencySymbol(obj.currency), // ВСЕГДА $ для экспорта
+      currencySymbol(obj.currency),
     ]),
   ];
   if (format === 'csv') {
@@ -282,7 +280,6 @@ function saveAndClose() {
 }
 
 .widget-settings-header {
-  flex: 0 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -292,7 +289,6 @@ function saveAndClose() {
   padding: 18px 30px 12px 30px;
   border-bottom: 1.6px solid #f98ab6;
   background: #fff7fa;
-  border-radius: 9px 9px 0 0;
 }
 .widget-settings-close {
   background: none;
@@ -305,14 +301,11 @@ function saveAndClose() {
   flex: 1 1 auto;
   overflow-y: auto;
   padding: 18px 30px 8px 30px;
-  min-height: 100px;
   max-height: 420px;
 }
 .widget-settings-bottom {
-  flex: 0 0 auto;
-  padding: 16px 30px 16px 30px;
+  padding: 16px 30px;
   border-top: 1.6px solid #f98ab6;
-  border-radius: 0 0 9px 9px;
   background: #fff7fa;
   text-align: center;
 }
@@ -323,7 +316,7 @@ function saveAndClose() {
   border: 1.6px solid #f98ab6;
   border-radius: 9px;
   background: #fff;
-  margin: 10px 0 0 0;
+  margin-top: 10px;
 }
 
 .step-block {
@@ -340,6 +333,7 @@ function saveAndClose() {
   display: flex;
   justify-content: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 .btn-ecwid-primary {
   background: linear-gradient(90deg, #ee3a78 0%, #efb732 100%);
@@ -389,7 +383,6 @@ function saveAndClose() {
 .ec-table.export-products-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 0;
   font-size: 1em;
 }
 .ec-table.export-products-table th,
@@ -406,5 +399,100 @@ function saveAndClose() {
   position: sticky;
   top: 0;
   z-index: 1;
+}
+
+.export-btns {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ===== Мобильные стили ===== */
+@media (max-width: 768px) {
+  .widget-settings-main {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95vw;
+    height: auto;
+    max-height: 90vh;
+    border-width: 3px;
+    border-radius: 10px;
+  }
+  .widget-settings-header {
+    font-size: 1.05em;
+    padding: 14px 16px;
+  }
+  .widget-settings-scroll-content {
+    padding: 14px 16px 8px 16px;
+  }
+  .btn-ecwid-primary,
+  .btn-ecwid-default,
+  .btn-ecwid-save {
+    padding: 8px 14px;
+    font-size: 0.95em;
+  }
+}
+
+@media (max-width: 480px) {
+  .widget-settings-main {
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    border-radius: 0;
+  }
+  .widget-settings-header {
+    font-size: 1em;
+    padding: 12px;
+  }
+  .widget-settings-scroll-content {
+    padding: 12px;
+    max-height: calc(100% - 120px);
+  }
+  .catalog-export-table-scroll {
+    max-height: none;
+    overflow-x: auto;
+  }
+  .ec-table.export-products-table,
+  .ec-table.export-products-table thead,
+  .ec-table.export-products-table tbody,
+  .ec-table.export-products-table th,
+  .ec-table.export-products-table td,
+  .ec-table.export-products-table tr {
+    display: block;
+    width: 100%;
+  }
+  .ec-table.export-products-table thead {
+    display: none;
+  }
+  .ec-table.export-products-table tr {
+    margin-bottom: 8px;
+    border: 1px solid #f98ab6;
+    border-radius: 6px;
+    padding: 6px;
+    background: #fff;
+  }
+  .ec-table.export-products-table td {
+    border: none;
+    padding: 4px 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .ec-table.export-products-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #b24369;
+    padding-right: 10px;
+  }
+  .export-btns {
+    flex-direction: column;
+  }
+  .export-btns button {
+    width: 100%;
+  }
 }
 </style>

@@ -12,7 +12,7 @@ const products = ref<ProductItem[]>([]);
 const selected = ref<string[]>([]);
 
 async function fetchProducts() {
-  const resp = await fetch('/api/products/recent?limit=100'); // или отдельный endpoint для всех
+  const resp = await fetch('/api/products/recent?limit=100');
   const data = await resp.json();
   products.value = Array.isArray(data.items) ? data.items : [];
 }
@@ -30,7 +30,6 @@ async function exportSelected() {
     body: JSON.stringify({ productIds: selected.value }),
     headers: { 'Content-Type': 'application/json' },
   });
-  // Ожидаем csv-ответ
   const csv = await resp.text();
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = window.URL.createObjectURL(blob);
@@ -45,37 +44,48 @@ onMounted(fetchProducts);
 </script>
 
 <template>
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Currency</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="p in products" :key="p.id">
-        <td>
-          <input
-            type="checkbox"
-            :value="p.id"
-            @change="toggleSelection(p.id)"
-            :checked="selected.includes(p.id)"
-          />
-        </td>
-        <td>{{ p.name }}</td>
-        <td>{{ p.price }}</td>
-        <td>{{ p.currency || '$' }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <button @click="exportSelected" :disabled="selected.length === 0">
-    Export Selected
-  </button>
+  <div class="export-widget">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Currency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="p in products" :key="p.id">
+            <td data-label="">
+              <input
+                type="checkbox"
+                :value="p.id"
+                @change="toggleSelection(p.id)"
+                :checked="selected.includes(p.id)"
+              />
+            </td>
+            <td data-label="Name">{{ p.name }}</td>
+            <td data-label="Price">{{ p.price }}</td>
+            <td data-label="Currency">{{ p.currency || '$' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button @click="exportSelected" :disabled="selected.length === 0">
+      Export Selected
+    </button>
+  </div>
 </template>
 
 <style scoped>
+.export-widget {
+  width: 100%;
+  max-width: 640px;
+}
+.table-wrapper {
+  overflow-x: auto;
+}
 table {
   width: 100%;
   border-collapse: collapse;
@@ -99,5 +109,51 @@ button {
 button:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+/* ===== Мобильная адаптация ===== */
+@media (max-width: 600px) {
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+    width: 100%;
+  }
+  thead {
+    display: none;
+  }
+  tr {
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 6px;
+    background: #fff;
+  }
+  td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    padding: 6px 4px;
+  }
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #666;
+    padding-right: 10px;
+    flex-shrink: 0;
+  }
+  td[data-label='']::before {
+    content: '';
+  }
+  button {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1em;
+    border-radius: 6px;
+  }
 }
 </style>

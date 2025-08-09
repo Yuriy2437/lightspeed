@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <!-- Компактный список товаров -->
+    <!-- Список товаров -->
     <div class="filtered-list__items long-list">
       <div
         v-for="product in filteredProducts"
@@ -198,7 +198,6 @@ function currency(amount: number, code: string = 'USD') {
 }
 
 function productLink(product: any) {
-  // Для демо: ссылка на страницу товара в вашем storefront или роутере
   return `/product/${product.id}`;
 }
 </script>
@@ -242,5 +241,63 @@ function productLink(product: any) {
 }
 .ml-1 {
   margin-left: 8px;
+}
+
+/* === Мобильная адаптация === */
+@media (max-width: 900px) {
+  .product-sidebar {
+    max-width: 280px;
+    min-width: 240px;
+    padding: 0 12px 12px 12px;
+  }
+}
+@media (max-width: 768px) {
+  .product-sidebar {
+    width: 100%;
+    max-width: 100%;
+    min-width: unset;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    min-height: auto;
+    padding: 8px 12px 12px 12px;
+  }
+  .list-element--compact {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .list-element__image img {
+    width: 44px !important;
+    height: 44px !important;
+  }
+}
+@media (max-width: 480px) {
+  .toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ml-1 {
+    margin-left: 0;
+  }
+  .list-element--compact {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .list-element__image {
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+  .list-element__image img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 120px;
+    border-radius: 6px;
+  }
+  .btn-small {
+    width: 100%;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 15px;
+  }
 }
 </style>
